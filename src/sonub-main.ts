@@ -1,7 +1,7 @@
 import { getNightmare } from './nightmare';
 import * as t from './test';
 
-const cheerio = require('cheerio');
+    const cheerio = require('cheerio');
 
 
 export class SonubMain {
