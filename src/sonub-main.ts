@@ -21,7 +21,7 @@ export class SonubMain {
 
 
     async openSonub() {
-        console.log("openSonub()");
+        console.log("openSonub() ... ...... ..");
         return this.nightmare.goto("https://www.sonub.com")
             .wait(5000)
             .evaluate(() => {
