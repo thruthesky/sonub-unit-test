@@ -1,9 +1,10 @@
+import { config } from './../confis';
 import { getNightmare } from '../nightmare';
 import * as t from '../test';
 const c = require('cheerio');
 
 
-let url = 'https://sonub.com';
+let url = config.url;
 
 let n = getNightmare();
 
@@ -36,9 +37,7 @@ async function run() {
         .click('.skip')
         .wait('#name')
         .type('#name', "MyName")
-        .wait(3000)
         .click('#UpdateButton')
-        .wait(1000)
         .wait('.home-form-footer-button')
         .evaluate(() => document.querySelector('html').innerHTML)
         .then(html => html);
