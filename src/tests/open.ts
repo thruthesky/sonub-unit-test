@@ -1,5 +1,7 @@
 /**
- * Opens sonub.com and test all the links.
+ * Opens sonub.com and test all the routes(link) INCLUDING error test.
+ * But no login, no registration and no posting/commenting.
+ * No write activity.
  * 
  */
 import { config } from './../confis';
@@ -47,31 +49,19 @@ async function run() {
     $html = c.load(html)('html');
     t.isTrue( $html.find('.login-page').length == 1, 'Login page check...');
 
-
-
-    // html = await n
-    //     .click('#login-submit')
-    //     // .wait(1000)
-    //     .wait('.alert-content-bottom')
-    //     .evaluate( () => document.querySelector('html').innerHTML)
-    //     .then( a => a );
-
-    //     // console.log(html);
-    // $html = c.load(html)('html');
-    // // console.log( "find: ", $html.find('.error-42051').length );
-    // t.isTrue( $html.find('.error-42051').length == 1, "Empty email.");
-
     await checkIf('.error-42051', 'Empty email');
 
     await closeAlert();
     await n.type('#register_user_login', 'abcde');
     await checkIf('.error-42052', 'Empty password');
    
+    await closeAlert();
+    await n.type('#register_user_pass', 'xxxxxxx');
+    await checkIf('.error-42053', 'No user by that email.');
 
 
     await closeAlert();
-    await n.type('#register_user_pass', 'xxxxxxx');
-    await checkIf('.error-42053', 'No user by that email');
+    await n.click('#login-register');
 }
 
 
