@@ -76,25 +76,13 @@ async function run() {
 
 
     await $n.typeEnter('.posts .post:first-child .comment-content', 'hello');
-    await $n.waitTest('.error', '.error-80005', 'Creating comment without login');
+    await $n.waitTest('.error', '.error-80005', 'Creating comment without login.');
     await $n.closeAlert();
 
     // test
     /// like
     /// dislike
     /// reply
-    
-
-
-
-    
-    
-
-
-
-
-
-
     
 
 
