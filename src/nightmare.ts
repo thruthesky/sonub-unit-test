@@ -8,7 +8,7 @@ import { config } from './confis';
 
 
 let defaultOptions = {
-    show: true, x: 1024, y: 0, width: 640,
+    show: true, x: 1024, y: 0, width: 640, height: 800,
     openDevTools: { mode: '' }
 };
 

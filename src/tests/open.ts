@@ -20,11 +20,11 @@ async function run() {
     let $n = new Mare();
     let $h = await $n.html($n.urlHome);
     $n.test($h.find('title').length == 1, "Site open..");
-    $n.test($h.find('#header-menu-icon').length == 1, 'check menu icon');
+    $n.test($h.find('#header-menu-icon').length == 1, 'check menu icon.. count: ' + $h.find('#header-menu-icon').length);
 
 
     await $n.openMenuPage();
-    await $n.clickWaitTest('#menu-page-login', '.login-page', '.login-page', 'check login page.' );
+    await $n.clickWaitTest('#menu-page-login', '.login-page', '.login-page', 'check login page..' );
     
     await $n.submit();
     await $n.wait('.modal.error');
@@ -54,8 +54,6 @@ async function run() {
 
     await $n.closeAlert();
 
-
-
     // ask list
     // await $n.clickWaitTest('#header-menu-icon', '#menu-page-header', '#menu-page-header', 'check menu page header' ); // menu page
     await $n.openCommunityPage();
@@ -76,75 +74,21 @@ async function run() {
 
 
     await $n.typeEnter('.posts .post:first-child .comment-content', 'hello');
-    await $n.waitTest('.error', '.error-80005', 'Creating comment without login.');
+    await $n.waitTest('.error', '.error-80005', 'Creating comment without login..');
     await $n.closeAlert();
 
     // test
+    
     /// like
+    $h = await $n.html();
+    $n.test( $h.find('li.like').length > 0, "Like buttons" );
+    $n.test( $h.find('li.like').eq(0).text().trim() == 'Like', "Like button check" );
+    await $n.clickWaitTest('.post:first-child .like', '.error', '.error-80005', 'Like error');
+    await $n.closeAlert();
+    // console.log("like:" + $h.find('li.like').eq(0).text());
     /// dislike
     /// reply
-    
-
-
-
-    // let html = await n.goto(url)
-    //     .evaluate(() => document.querySelector('html').innerHTML)
-    //     .then(html => html);
-
-    // let $html = c.load(html)('html');
-
-    // console.log("count: ", $html.find('.page').length);
-
-    // t.isTrue($html.find('title').length == 1, "Site open..");
-
-
-
-    // t.isTrue($html.find('#header-menu-icon').length == 1, 'check menu icon');
-
-    // html = await n.
-    //     click('#header-menu-icon')
-    //     .wait('#menu-page-header')
-    //     .evaluate(() => document.querySelector('html').innerHTML)
-    //     .then(a => a);
-
-    // $html = c.load(html)('html');
-    // t.isTrue($html.find('#menu-page-header').length == 1, 'check menu page header..');
-
-
-    // html = await n
-    //     .click('#menu-page-login')
-    //     .wait('.login-page')
-    //     .evaluate(() => document.querySelector('html').innerHTML)
-    //     .then(a => a);
-    // $html = c.load(html)('html');
-    // t.isTrue($html.find('.login-page').length == 1, 'Login page check...');
-
-
-    // await checkIf('.error-42051', 'Empty email');
-
-    // await closeAlert();
-    // await n.type('#register_user_login', 'abcde');
-    // await checkIf('.error-42052', 'Empty password');
-
-    // await closeAlert();
-    // await n.type('#register_user_pass', 'xxxxxxx');
-    // await checkIf('.error-42053', 'No user by that email.');
-
-
-    // await closeAlert();
-    // await n.click('#login-register');
+        
 }
 
 
-// async function closeAlert() {
-//     await n.click('button.alert-close').then();
-// }
-
-
-// async function checkIf(selector, msg) {
-//     await n.click('#login-submit');
-//     await n.wait('.alert-content-bottom');
-//     let doc = await n.evaluate(() => document.querySelector('html').innerHTML).then(a => a);
-//     let $html = c.load(doc)('html');
-//     t.isTrue($html.find(selector).length == 1, msg);
-// }
