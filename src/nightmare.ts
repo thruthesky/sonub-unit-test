@@ -81,6 +81,14 @@ export class Mare {
     enter(selector) {
         return this.nightmare.type(selector, "\x0d");
     }
+    check(selector) {
+        return this.nightmare.check(selector);
+    }
+    select(selector,option) {
+        return this.nightmare.select(selector, option);
+    }
+
+
     async typeEnter(selector, text) {
         await this.type(selector, text);
         await this.enter(selector);

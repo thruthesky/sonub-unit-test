@@ -18,9 +18,9 @@ run();
 async function run() {
 
     let html = await n.goto(url + '/user/register')
-        .type('#user1', temp_email)
-        .type('#user_pass', temp_password)
-        .click('#registerButton')
+        .type('#register-email', temp_email)
+        .type('#register-password', temp_password)
+        .click('#register-submit')
         .wait('.profile-user-photo')
         .evaluate(() => document.querySelector('html').innerHTML)
         .then(html => html);
