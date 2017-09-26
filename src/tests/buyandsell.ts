@@ -10,16 +10,19 @@ const c = require('cheerio');
 
 let url = config.url;
 let n = getNightmare();
-
-let name = "tmp" + (new Date).getTime();
+let time = (new Date).getTime();
+let name = "tmp" + time;
 let temp_email = name + "@gmail.com";
 let temp_password = "password";
 
 
-let product_name = 'prod'+(new Date).getTime();
+let product_title = 'prod'+time;
+let product_description = 'description'+time;
 let price = Math.ceil(Math.random() * 100000);
 let tag = 'tag' + (new Date).getTime();
 let used =  '#usedItem' + Math.ceil(Math.random() * 3);
+let deliverable = '#deliver' + Math.ceil(Math.random() * 2)
+let contact = 'contact'+time;
 
 let emailTest = 'unit@test.com';
 
@@ -77,7 +80,16 @@ async function createProduct() {
     await $n.type('#tag', tag);
     console.log('used::', used);
     await $n.check(used);
-    await $n.select('#province', 'option[value="Abra"]');
-    // await $n.click('#province');
+    await $n.select('#province', 'Abra');
+    await $n.wait('#city');
+    await $n.select('#city', 'Abra - Manabo')
+    await $n.check(deliverable);
+    console.log('deliveable::', deliverable);
+    await $n.type('#price', price);
+    console.log('price::', price);
+    await $n.type('#title', product_title);
+    await $n.type('#description', product_description);
+    await $n.type('#contact', contact);
+
 
 }
