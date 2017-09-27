@@ -7,8 +7,13 @@ import { config } from './confis';
 
 
 
+// let defaultOptions = {
+//     show: true, x: 1024, y: 0, width: 640,
+//     openDevTools: { mode: '' }
+// };
+
 let defaultOptions = {
-    show: true, x: 1024, y: 0, width: 640,
+    show: true, x: 1024, y: 0, width: 900, height: 1000,
     openDevTools: { mode: '' }
 };
 
@@ -68,7 +73,9 @@ export class Mare {
     }
 
 
-
+    path() {
+        return this.nightmare.path();
+    }
     click(selector) {
         return this.nightmare.click(selector);
     }
@@ -77,6 +84,9 @@ export class Mare {
     }
     type(selector, text) {
         return this.nightmare.type(selector, text);
+    }
+    insert(selector, text) {
+        return this.nightmare.insert(selector, text);
     }
     enter(selector) {
         return this.nightmare.type(selector, "\x0d");
@@ -119,6 +129,7 @@ export class Mare {
     }
 
 
+
     async closeAlert() {
         await this.click('button.alert-close').wait(100).then();
     }
@@ -136,6 +147,29 @@ export class Mare {
         await this.clickWaitTest('#community-qna-button', '#post-list-qna', '#post-list-qna', "Open post list page. Qna");
     }
 
+
+    async waitDisappear( selector, timeout=30 ) {
+        let $html = null;
+        let maxWaitCount = timeout * 1000 / 100;
+        for ( let i = 0; i < maxWaitCount; i ++ ) {
+            await this.wait(100);
+            $html = await this.html();
+            if ( $html.find(selector).length == 0 ) return true;
+        }
+        return false;
+    }
+
+    async waitSelectorExist(trueSelector, falseSelector, timeout=30) {
+        let $html = null;
+        let maxWaitCount = timeout * 1000 / 100;
+        for ( let i = 0; i < maxWaitCount; i ++ ) {
+            await this.wait(100);
+            $html = await this.html();
+            if ( $html.find(trueSelector).length > 0 ) return true;
+            if ( $html.find(falseSelector).length > 0 ) return false;
+        }
+        return false;
+    }
 
 
 }
