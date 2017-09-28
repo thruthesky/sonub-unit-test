@@ -33,10 +33,10 @@ async function run() {
 
     let $h = await $n.html($n.urlHome);
 
-    await $n.test($h.find('title').length == 1, "Site open..");
+    await $n.test($h.find('title').length == 1, "Site open...");
     await $n.test($h.find('.fa.fa-user-plus').length == 1, "user is not log-in");
 
-    await $n.html($n.urlHome + '/jobs')
+    // await $n.html($n.urlHome + '/jobs')
 
     await openBuyandsell();
     await $n.clickWaitTest('#buyandsell-list-create-button', '.error', '.error-8071', "User Must log in/register first.");
@@ -70,14 +70,15 @@ async function userRegister() {
 async function openBuyandsell() {
     await $n.openCommunityPage();
     await $n.wait('#community-buyandsell-button');
-    await $n.clickWaitTest('#community-buyandsell-button', '#buyandsell-list-create-button', '#buyandsell-list-create-button', "Opening Buy and Sell");
+    await $n.clickWaitTest('#community-buyandsell-button', '#buyandsell-list-create-button', '#buyandsell-list-create-button', "Opening Buy and Sell..");
 }
 
 async function createProduct() {
     await $n.type('#tag', tag);
     console.log('used::', used);
     await $n.check(used);
-    await $n.select('#province', 'option[value="Abra"]');
+    await $n.select('#province', 'Abra');
     // await $n.click('#province');
+
 
 }

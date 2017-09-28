@@ -124,7 +124,7 @@ export class Mare {
     }
 
     async openMenuPage() {
-        await this.clickWaitTest('#header-menu-icon', '#menu-page-header', '#menu-page-header', 'Open menu page. Check menu page header' ); // menu page
+        await this.clickWaitTest('#header-menu-icon', '#menu-page-header', '#menu-page-header', 'Open menu page. Check menu page header.' ); // menu page
     }
 
     async openCommunityPage() {
