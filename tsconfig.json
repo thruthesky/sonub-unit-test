@@ -10,8 +10,8 @@
     "noImplicitAny": false,
     "removeComments": true,
     "outDir": "dist",
-    "lib": ["es6"],
-    "noStrictGenericChecks": true
+    "lib": ["es6"]
+    // "noStrictGenericChecks": true
   },
   "include": [
     "src/**/*.ts"
