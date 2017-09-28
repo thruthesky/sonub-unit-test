@@ -46,8 +46,8 @@ export class SonubNightMare extends Nightmare {
         await this.openMenuPage();
         await this.wait('#menu-page-login');
         await this.clickWaitTest('#menu-page-login', 'login-page', 'Login Page' );
-        await this.insert('#register_user_login', this.emailTest);
-        await this.insert('#register_user_pass', this.passwordTest);
+        await this.insert('#register_user_login', email);
+        await this.insert('#register_user_pass', password);
         await this.submit();
         let loginStatus = await this.waitSelectorExist('.error-42053', '.home-form-header');
         if (loginStatus) {
