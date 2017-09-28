@@ -12,32 +12,23 @@ class Jobs extends SonubNightMare {
 
     emailTest = 'unit@test.com';
     passwordTest = "password";
-
-    time = (new Date).getTime();
-    firstName = 'Name'+ this.time;
-    middleName = 'Middle';
-    lastName = 'Last';
-
-
-
-    newFirstName = 'newName' + this.time;
-
-    fullName = this.firstName + ' ' + this.middleName + ' ' + this.lastName;
-    newFullName = this.newFirstName + ' ' + this.middleName + ' ' + this.lastName;
-
-    mobile = this.time;
-    address = 'Address ' + this.time;
+    firstName;
+    middleName;
+    lastName;
+    newFirstName;
+    fullName;
+    newFullName;
+    mobile;
+    address;
+    gender;
+    randomExperience;
+    experience;
+    randomProfession;
+    message;
 
 
-    gender = '#gender' + Math.ceil(Math.random() * 2);
-    randomExperience =  (Math.ceil(Math.random() * 23));
-    experience = 0;
-    randomProfession = Math.floor(Math.random() * 2);
+
     profession = ['housemaid', 'driver', 'babysitter' ];
-    message =  'message ' + this.time;
-
-
-
 
 
     constructor(defaultOptions) {
@@ -53,13 +44,15 @@ class Jobs extends SonubNightMare {
 
 
         this.nextAction('##### ANONYMOUS CRUD #####');
+        this.initInput('ANO');
         await this.openJobsPage();
         await this.createJobsAnonymous();
         await this.editJobsAnonymous();
         await this.searchJobs();
-        // await this.deleteJobsAnonymous();
+        await this.deleteJobsAnonymous();
 
-        this.nextAction('##### REGISTERED USER CRUD #####');
+        this.nextAction('##### REGISTERED USER JOB CRUD #####');
+        this.initInput('REG');
         await this.userLogin( this.emailTest, this.passwordTest );
         await this.openJobsPage();
         await this.createJobWithUser();
@@ -69,6 +62,25 @@ class Jobs extends SonubNightMare {
 
 
         console.log('END OF JOBS PAGE CHECKING');
+    }
+
+
+    initInput(pre = 'tmp') {
+        let time = (new Date).getTime();
+        this.firstName = pre + 'Name'+ time;
+        this.middleName = 'Middle';
+        this.lastName = 'Last';
+        this.newFirstName = 'newName' + time;
+        this.fullName = this.firstName + ' ' + this.middleName + ' ' + this.lastName;
+        this.newFullName = this.newFirstName + ' ' + this.middleName + ' ' + this.lastName;
+        this.mobile = ''+time;
+        this.address = 'Address ' + time;
+        this.gender = '#gender' + Math.ceil(Math.random() * 2);
+        this.randomExperience =  (Math.ceil(Math.random() * 23));
+        this.experience = 0;
+        this.randomProfession = Math.floor(Math.random() * 2);
+        this.message =  'message ' + time;
+
     }
 
 
@@ -114,7 +126,7 @@ class Jobs extends SonubNightMare {
         await this.closeAlert();
 
         await this.check( this.gender);
-        await this.select('#workExperience', this.experience);
+        await this.select('#workExperience', ''+this.experience);
         await this.select('#workProfession', this.profession[this.randomProfession]);
 
         await this.waitTest('option[value="Metro Manila"]', 'province was loaded');
@@ -174,7 +186,7 @@ class Jobs extends SonubNightMare {
         await this.searchResult('Search with City');
         await this.check(this.gender);
         await this.searchResult('Search with Gender');
-        await this.select('#experience', this.experience);
+        await this.select('#experience', ''+this.experience);
         await this.searchResult('Search with experience');
         await this.type('#name', this.newFirstName);
         await this.searchResult('Search With new Name');
