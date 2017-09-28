@@ -13,7 +13,7 @@ declare var document;
 // };
 
 let defaultOptions = {
-    show: true, x: 1024, y: 0, width: 900, height: 1000,
+    show: true, x: 1024, y: 0, width: 640, height: 800,
     openDevTools: { mode: '' }
 };
 
@@ -132,7 +132,7 @@ export class Mare {
     }
 
     async openMenuPage() {
-        await this.clickWaitTest('#header-menu-icon', '#menu-page-header', '#menu-page-header', 'Open menu page. Check menu page header' ); // menu page
+        await this.clickWaitTest('#header-menu-icon', '#menu-page-header', '#menu-page-header', 'Open menu page. Check menu page header.' ); // menu page
     }
 
     async openCommunityPage() {
