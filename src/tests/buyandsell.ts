@@ -1,202 +1,192 @@
-/**
- * Register => goto buyandsell => create post =>
- *
- */
-
+import {SonubNightMare} from './../sonub/nightmare';
 import {config} from './../confis';
-import {getNightmare, Mare} from '../nightmare';
-import * as t from '../test';
-const c = require('cheerio');
-
-let url = config.url;
-let n = getNightmare();
-let time = (new Date).getTime();
-let name = "tmp" + time;
 
 
-let product_title = 'prod' + time;
-let product_description = 'description' + time;
-let price = Math.ceil(Math.random() * 100) * 10000;
-let tag = 'tag' + (new Date).getTime();
-let used = '#usedItem' + Math.ceil(Math.random() * 3);
-let deliverable = '#deliver' + Math.ceil(Math.random() * 2)
-let contact = 'contact' + time;
-
-let emailTest = 'unit@test.com';
-let passwordTest = "password";
+let defaultOptions = {
+    show: true, x: 1024, y: 0, width: 900, height: 1000,
+    openDevTools: {mode: ''}
+};
 
 
-// let newProduct = 'newProd' + time;
-let newProduct = 'newProd1506502613358';
+class BuyAndSell extends SonubNightMare {
 
+    emailTest = 'unit@test.com';
+    passwordTest = "password";
 
-let $n = new Mare();
+    time = (new Date).getTime();
 
+    product_title = 'prod' + this.time;
+    product_description = 'description' + this.time;
 
-run();
+    newProduct = 'newProd' + this.time;
 
-async function run() {
+    name = "name" + this.time;
+    price = '' + Math.ceil(Math.random() * 10000) * 100;
+    tag = 'tag' + (new Date).getTime();
+    used = '#usedItem' + Math.ceil(Math.random() * 3);
+    deliverable = '#deliver' + Math.ceil(Math.random() * 2);
+    contact = 'contact' + this.time;
 
-    let $h = await $n.html($n.urlHome);
-
-    await $n.test($h.find('title').length == 1, "Site open..");
-    await $n.test($h.find('.fa.fa-user-plus').length == 1, "user is not log-in");
-
-    await openBuyandsell();
-    await $n.clickWaitTest('#buyandsell-list-create-button', '.error', '.error-80005', "User Must log in/register first.");
-    await $n.closeAlert();
-
-    await userLogin();
-
-    await openBuyandsell();
-
-    // await createProduct();
-    // await viewProduct();
-    // await editProduct();
-
-    await searchProduct();
-}
-
-async function userLogin() {
-    await $n.insert('#register_user_login', emailTest);
-    await $n.insert('#register_user_pass', passwordTest);
-    await $n.submit();
-    let loginStatus = await $n.waitSelectorExist('.error-42053', '.home-form-header');
-    if (loginStatus) {
-        await $n.closeAlert();
-        await userRegister();
+    constructor(defaultOptions) {
+        super(defaultOptions);
+        // this.firefox();
     }
-}
-
-async function userRegister() {
-    await $n.clickWaitTest('#login-register', '#register-submit', '#register-submit', 'Open Register Page.');
-    await $n.type('#register-email', emailTest);
-    await $n.type('#register-password', passwordTest);
-    await $n.clickWaitTest('#register-submit', '.profile-user-photo', '.profile-user-photo', 'Registration Success');
-    await $n.clickWaitTest('#skipProfilePicture', '#UpdateButton', 'UpdateButton', 'Registration skip profile upload');
-    await $n.type('#name', name);
-    await $n.clickWaitTest('#UpdateButton', '.home-form-footer-button', '.home-form-footer-button', 'registration finish.')
-}
 
 
-async function openBuyandsell() {
-    await $n.openCommunityPage();
-    await $n.wait('#community-buyandsell-button');
-    await $n.clickWaitTest('#community-buyandsell-button', '#buyandsell-list-create-button', '#buyandsell-list-create-button', "Opening Buy and Sell");
-}
+    async main() {
 
-async function createProduct() {
-    await $n.clickWaitTest('#buyandsell-list-create-button', '.buyandsell-create-edit-page', '.buyandsell-create-edit-page', 'buy and sell create form.');
-    await $n.clickWaitTest('.product-submit', '.error-90031', '.error-90031', '*Tag is required');
-    await $n.closeAlert();
-    await $n.type('#tag', tag);
-    // console.log('used::', used);
-    await $n.click(used);
-    await $n.clickWaitTest('.product-submit', '.error-90032', '.error-90032', '*Province is required');
-    await $n.closeAlert();
+        let $h = await this.get(config.url);
 
-    await $n.waitTest('option[value=Abra]', 'option[value=Abra]', 'province was loaded' );
-    await $n.select('#province', 'Abra');
-    await $n.waitTest('select#province[ng-reflect-model=Abra]','select#province[ng-reflect-model=Abra]', 'province changed');
+        await this.test($h.find('title').length == 1, "###### BUY AND SELL CHECKING.... ######");
+        await this.test($h.find('.fa.fa-user-plus').length == 1, "user is not log-in");
 
-    await $n.waitTest('option[value="Abra - Manabo"]', 'option[value="Abra - Manabo"]', 'city was loaded' );
-    await $n.select('#city', 'Abra - Manabo');
-    await $n.waitTest('select#city[ng-reflect-model="Abra - Manabo"]','select#city[ng-reflect-model="Abra - Manabo"]', 'city changed');
+        await this.openBuyandsell();
+        await this.clickWaitTest('#buyandsell-list-create-button', '.error-80005', "User Must log in/register first.");
+        await this.closeAlert();
+
+        await this.userLogin( this.emailTest, this.passwordTest );
+        await this.openBuyandsell();
+        await this.createProduct();
+        await this.editProduct();
+        await this.searchProduct();
+        await this.deleteProduct();
+        console.log('END OF BUY AND SELL CHECKING');
+    }
+
+    async openBuyandsell() {
+        await this.openCommunityPage();
+        await this.wait('#community-buyandsell-button');
+        await this.clickWaitTest('#community-buyandsell-button', '#buyandsell-list-create-button', "Opening Buy and Sell");
+    }
+
+    async createProduct() {
+
+        this.nextAction('##### CREATING BUY AND SELL POST #####');
+        await this.clickWaitTest('#buyandsell-list-create-button', '.buyandsell-create-edit-page', 'buy and sell create form.');
+        await this.clickWaitTest('.product-submit', '.error-90031', '*Tag is required');
+        await this.closeAlert();
+        await this.type('#tag', this.tag);
+        await this.click(this.used);
+        await this.clickWaitTest('.product-submit', '.error-90032', '*Province is required');
+        await this.closeAlert();
+
+        await this.waitTest('option[value=Abra]', 'province was loaded');
+        await this.select('#province', 'Abra');
+        await this.waitTest('select#province[ng-reflect-model=Abra]', 'province changed');
+
+        await this.waitTest('option[value="Abra - Manabo"]', 'city was loaded');
+        await this.select('#city', 'Abra - Manabo');
+        await this.waitTest('select#city[ng-reflect-model="Abra - Manabo"]', 'city changed');
 
 
-    await $n.click(deliverable);
-    // console.log('deliveable::', deliverable);
-    await $n.clickWaitTest('.product-submit', '.error-90033', '.error-90033', '*Price is required');
-    await $n.closeAlert();
-    await $n.type('#price', price);
-    // console.log('price::', price);
-    await $n.clickWaitTest('.product-submit', '.error-90034', '.error-90034', '*Title is required');
-    await $n.closeAlert();
-    await $n.type('#title', product_title);
-    await $n.clickWaitTest('.product-submit', '.error-90035', '.error-90035', '*Description is required');
-    await $n.closeAlert();
-    await $n.type('#description', product_description);
-    await $n.clickWaitTest('.product-submit', '.error-90036', '.error-90036', '*Contact is required');
-    await $n.closeAlert();
-    await $n.type('#contact', contact);
-    await $n.clickWaitTest('.product-submit', '.modal-dialog', '.buyandsell-success', 'buyandsell post success.');
-    await $n.closeAlert();
-}
+        await this.click(this.deliverable);
+        await this.clickWaitTest('.product-submit', '.error-90033', '*Price is required');
+        await this.closeAlert();
+        await this.type('#price', this.price);
+        await this.clickWaitTest('.product-submit', '.error-90034', '*Title is required');
+        await this.closeAlert();
+        await this.type('#title', this.product_title);
+        await this.clickWaitTest('.product-submit', '.error-90035', '*Description is required');
+        await this.closeAlert();
+        await this.type('#description', this.product_description);
+        await this.clickWaitTest('.product-submit', '.error-90036', '*Contact is required');
+        await this.closeAlert();
+        await this.type('#contact', this.contact);
+        await this.clickWaitTest('.product-submit', '.buyandsell-success', 'buyandsell post success.');
+        await this.closeAlert();
+    }
 
-async function viewProduct() {
-    await $n.wait('.buyandsells a');
-    let $h = await $n.html();
-    let $selector = await $h.find('.product_title');
-    let eq = 1;
-    for (let i = 1; i < $selector.length; i++) {
-        if ($selector.eq(i-1).text() == product_title) {
-            // console.log('Product Exist: ', product_title);
-            eq = i;
-            break;
+    async viewProduct() {
+        await this.wait('.buyandsells a');
+        let $h = await this.getHtml();
+        let $selector = $h.find('.product_title');
+        let $eq = 1;
+        for (let i = 1; i < $selector.length; i++) {
+            if ($selector.eq(i - 1).text() == this.product_title) {
+                $eq = i;
+                break;
+            }
         }
+        await this.clickWaitTest(`.buyandsells a:nth-child(${$eq})`, '.fa-pencil', 'Product View Page');
     }
-    await $n.clickWaitTest(`.buyandsells a:nth-child(${eq})`, '.fa-pencil', '.buyandsell-view-page', 'Product View Page');
-}
 
-async function editProduct() {
-    await $n.wait('buy-and-sell-view-page .fa-pencil');
-    await $n.clickWaitTest('buy-and-sell-view-page .fa-pencil', '#city', '.buyandsell-create-edit-page', 'Product Edit Page');
-    // console.log('newTitle:', newProduct);
-    await $n.type('#title', false);
-    await $n.type('#title', newProduct);
-    await $n.clickWaitTest('.product-submit', '.modal-dialog', '.buyandsell-success', 'buyandsell update success..' );
-    await $n.closeAlert();
-    await $n.wait('.buyandsells a');
-    let $h = await $n.html();
-    await $n.test( await $h.find('.product_title').eq(0).text() == newProduct, "Update Success");
-}
+    async editProduct() {
+        await this.viewProduct();
+        this.nextAction('##### EDITING BUY AND SELL POST #####');
+        await this.wait('buy-and-sell-view-page .fa-pencil');
+        await this.clickWaitTest('buy-and-sell-view-page .fa-pencil', '#city', 'Product Edit Page');
+        // console.log('newTitle:', newProduct);
+        await this.type('#title', '');
+        await this.type('#title', this.newProduct);
+        await this.clickWaitTest('.product-submit', '.buyandsell-success', 'buyandsell update success..');
+        await this.closeAlert();
+        await this.wait('.buyandsells a');
+        let $h = await this.getHtml();
+        await this.test(await $h.find('.product_title').eq(0).text() == this.newProduct, "Update Success");
+    }
 
-async function searchProduct() {
-    await $n.wait('.search-form input[formcontrolname="tag"]');
-    await $n.insert( 'input[formcontrolname="tag"]', newProduct );
-    await $n.waitTest('option[value=Abra]', '.search-summary', 'Search form full view' );
+    async searchProduct() {
 
-    await searchResult( 'Title search');
-    await $n.type( '#min', 890000 );
-    await searchResult( 'Search with Minimum Price');
-    await $n.type( '#max', 890000 );
-    await searchResult( 'Search with Maximum Price');
-    await $n.check('#usedItem1');
-    await searchResult( 'Search with Used item option');
-    await $n.check('#deliver1');
-    await searchResult( 'Search with Deliverable Option');
+        this.nextAction('##### SEARCHING BUY AND SELL POST #####');
+        await this.wait('.search-form input[formcontrolname="tag"]');
+        await this.insert('input[formcontrolname="tag"]', this.newProduct);
+        await this.waitTest('.search-summary', 'Search form full view');
+        await this.searchResult('Title search');
 
-    await $n.waitTest('option[value=Abra]', 'option[value=Abra]', 'province was loaded' );
-    await $n.select('#province', 'Abra');
-    await searchResult( 'Search with Province');
+        await this.type('#min', this.price);
+        await this.searchResult('Search with Minimum Price');
+        await this.type('#max', this.price);
+        await this.searchResult('Search with Maximum Price');
+        await this.check(this.used);
+        await this.searchResult('Search with Used item option');
+        await this.check(this.deliverable);
+        await this.searchResult('Search with Deliverable Option');
 
-    await $n.waitTest('option[value="Abra - Manabo"]', 'option[value="Abra - Manabo"]', 'city was loaded' );
-    await $n.select('#city', 'Abra - Manabo');
-    await searchResult( 'Search with City');
+        await this.waitTest('option[value=Abra]', 'province was loaded');
+        await this.select('#province', 'Abra');
+        await this.searchResult('Search with Province');
 
-    await viewProduct();
-    await deleteProduct();
-}
+        await this.waitTest('option[value="Abra - Manabo"]', 'city was loaded');
+        await this.select('#city', 'Abra - Manabo');
+        await this.searchResult('Search with City');
+    }
 
 
-async function deleteProduct() {
-    await $n.wait('buy-and-sell-view-page .fa-trash-o');
-    await $n.clickWaitTest('.fa-trash-o', '.confirm-modal', '.confirm-modal', 'delete prompt' );
-    await $n.clickWaitTest('button:first-child', '.buyandsells a', '.buyandsells a', 'deleted file' );
-}
+    async deleteProduct() {
+        await this.viewProduct();
+        this.nextAction('##### DELETING BUY AND SELL POST #####');
+        await this.wait('buy-and-sell-view-page .fa-trash-o');
+        await this.clickWaitTest('.fa-trash-o', '.confirm-modal', 'delete prompt');
+        await this.clickWaitTest('.modal-footer button:first-child', '.buyandsells a', 'deleted file');
 
-async function searchResult(msg) {
-    await $n.wait( 1100 );
-    await $n.wait('.buyandsells a');
-    let $h = await $n.html();
-    let $selector = await $h.find('.product_title');
-    let eq = false;
-    for (let i = 0; i < $selector.length; i++) {
-        if ($selector.eq(i).text() == newProduct) {
-            eq = true;
-            break;
+        await this.wait('.search-form input[formcontrolname="tag"]');
+        await this.insert('input[formcontrolname="tag"]', this.newProduct);
+        await this.waitTest('.search-summary', 'searching deleted product');
+        await this.wait('.no-more-post');
+        let $h = await this.getHtml();
+        await this.test($h.find('.product_title') == 0, 'Product was deleted properly');
+
+        await this.openBuyandsell();
+        await this.wait('.buyandsells a');
+        await this.searchResult('New product must not exist', true);
+    }
+
+    async searchResult(msg, exist = false) {
+        await this.wait(1100);
+        await this.wait('.buyandsells a');
+        let $h = await this.getHtml();
+        let $selector = $h.find('.product_title');
+        let $eq = exist;
+        for (let i = 0; i < $selector.length; i++) {
+            if ($selector.eq(i).text() == this.newProduct) {
+                $eq = !exist;
+                break;
+            }
         }
+        await this.test($eq, msg);
     }
-    await $n.test( eq, msg);
+
 }
 
+
+(new BuyAndSell(defaultOptions)).main();

@@ -3,7 +3,7 @@ const c = require('cheerio');
 import { config } from './confis';
 
 
-
+declare var document;
 
 
 
@@ -73,9 +73,6 @@ export class Mare {
     }
 
 
-    path() {
-        return this.nightmare.path();
-    }
     click(selector) {
         return this.nightmare.click(selector);
     }
