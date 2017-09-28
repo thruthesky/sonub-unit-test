@@ -3,7 +3,7 @@ import {config} from './../confis';
 
 
 let defaultOptions = {
-    show: true, x: 1024, y: 0, width: 900, height: 1000,
+    show: false, x: 1024, y: 0, width: 900, height: 1000,
     openDevTools: {mode: ''}
 };
 
@@ -62,6 +62,7 @@ class Jobs extends SonubNightMare {
 
 
         console.log('END OF JOBS PAGE CHECKING');
+        this._exit();
     }
 
 

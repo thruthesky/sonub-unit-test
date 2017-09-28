@@ -3,7 +3,7 @@ import {config} from './../confis';
 
 
 let defaultOptions = {
-    show: true, x: 1024, y: 0, width: 900, height: 1000,
+    show: false, x: 1024, y: 0, width: 900, height: 1000,
     openDevTools: {mode: ''}
 };
 
@@ -51,6 +51,7 @@ class BuyAndSell extends SonubNightMare {
         await this.searchProduct();
         await this.deleteProduct();
         console.log('END OF BUY AND SELL CHECKING');
+        this._exit();
     }
 
     async openBuyandsell() {

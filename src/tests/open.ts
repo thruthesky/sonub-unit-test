@@ -89,6 +89,11 @@ async function run() {
     /// dislike
     /// reply
         
+
+    $n.nightmare.end().then(()=>{});
+    process.exit(0);
+    
+    
 }
 
 

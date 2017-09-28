@@ -48,6 +48,9 @@ async function run() {
     t.isTrue($html.find('.home-form-footer-button').length > 0, "Register complete .... !");
 
 
+    
+    process.exit(0);
+
 }
 
 
