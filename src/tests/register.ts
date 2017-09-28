@@ -3,6 +3,7 @@ import { getNightmare } from '../nightmare';
 import * as t from '../test';
 const c = require('cheerio');
 
+declare var document;
 
 let url = config.url;
 

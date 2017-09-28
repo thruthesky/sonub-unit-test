@@ -2,7 +2,7 @@ import { getNightmare } from './nightmare';
 import * as t from './test';
 const cheerio = require('cheerio');
 
-
+declare var document;
 
 export class Sonub {
 
