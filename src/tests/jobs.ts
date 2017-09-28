@@ -14,9 +14,17 @@ class Jobs extends SonubNightMare {
     passwordTest = "password";
 
     time = (new Date).getTime();
-    firstName = 'Name ' + this.time;
-    middleName = 'Middle ' + this.time;
-    lastName = 'Last ' + this.time;
+    firstName = 'Name'+ this.time;
+    middleName = 'Middle';
+    lastName = 'Last';
+
+
+
+    newFirstName = 'newName' + this.time;
+
+    fullName = this.firstName + ' ' + this.middleName + ' ' + this.lastName;
+    newFullName = this.newFirstName + ' ' + this.middleName + ' ' + this.lastName;
+
     mobile = this.time;
     address = 'Address ' + this.time;
 
@@ -25,7 +33,7 @@ class Jobs extends SonubNightMare {
     randomExperience =  (Math.ceil(Math.random() * 23));
     experience = 0;
     randomProfession = Math.floor(Math.random() * 2);
-    professon = ['housemaid', 'driver', 'babysitter' ];
+    profession = ['housemaid', 'driver', 'babysitter' ];
     message =  'message ' + this.time;
 
 
@@ -48,8 +56,8 @@ class Jobs extends SonubNightMare {
 
         await this.createJobsAnonymous();
         await this.editJobsAnonymous();
-        // await this.searchJobs();
-        // await this.deleteJobsAnonymous();
+        await this.searchJobs();
+        await this.deleteJobsAnonymous();
 
         // await this.userLogin( this.emailTest, this.passwordTest );
         // await this.createWithUser();
@@ -96,6 +104,7 @@ class Jobs extends SonubNightMare {
 
         await this.check( this.gender);
         await this.select('#workExperience', this.experience);
+        await this.select('#workProfession', this.profession[this.randomProfession]);
 
         await this.waitTest('option[value="Metro Manila"]', 'province was loaded');
         await this.select('#province', 'Metro Manila');
@@ -112,31 +121,58 @@ class Jobs extends SonubNightMare {
 
     async editJobsAnonymous() {
         this.nextAction('##### EDITING JOBS POST BY ANONYMOUS #####');
-        await this.viewJobPost();
+        await this.viewJobPost( this.fullName );
+        await this.clickWaitTest('.fa-pencil', 'select#province[ng-reflect-model="Metro Manila"]', 'JOB Edit page');
+        await this.type('#firstName', '');
+        await this.type('#firstName', this.newFirstName);
 
-
+        await this.clickWaitTest('.job-submit', '.errorinput.password', '*anonymous password is required');
+        await this.closeAlert();
+        await this.type('#password', this.passwordTest);
+        await this.clickWaitTest('.job-submit', '.alert-modal', 'Anonymous Job Edit Success' );
+        await this.click('.alert-close');
+        await this.searchResult('New post was update properly');
     }
 
     async searchJobs() {
+        this.nextAction(`##### SEARCHING JOBS POST BY ANONYMOUS ${this.newFirstName} #####`);
+        await this.select('#jobProfession', this.profession[this.randomProfession]);
+        await this.waitTest('.search-form', 'Job form search...');
+        await this.searchResult('Search by profession');
 
+
+        await this.waitTest('option[value="Metro Manila"]', 'province was loaded');
+        await this.select('#searchByProvince', 'Metro Manila');
+        await this.searchResult('Search with Province');
+
+        await this.waitTest('option[value="Metro Manila - Taguig City"]', 'city was loaded');
+        await this.select('#city', 'Metro Manila - Taguig City');
+        await this.searchResult('Search with City');
+        await this.check(this.gender);
+        await this.searchResult('Search with Gender');
+        await this.select('#experience', this.experience);
+        await this.searchResult('Search with experience');
+        await this.type('#name', this.newFirstName);
+        await this.searchResult('Search With new Name');
     }
 
     async deleteJobsAnonymous() {
-
+        this.nextAction('##### DELETING JOB POST Anonymous #####');
+        await this.viewJobPost( this.newFullName );
     }
 
-    async viewJobPost() {
+    async viewJobPost(product) {
         await this.wait('.jobs .job');
         let $h = await this.getHtml();
         let $selector = $h.find('.full-name');
         let $eq = 1;
         for (let i = 1; i < $selector.length; i++) {
-            if ($selector.eq(i - 1).text() == this.product_title) {
+            if ($selector.eq(i - 1).text() == product) {
                 $eq = i;
                 break;
             }
         }
-        await this.clickWaitTest(`.jobs .job:nth-child(${$eq})`, '.fa-pencil', 'JOB View Page');
+        await this.clickWaitTest(`.jobs .job:nth-child(${$eq})`, '.fa-pencil', 'JOB View Page ' + product);
     }
 
 
@@ -148,6 +184,22 @@ class Jobs extends SonubNightMare {
         await this.wait('#community-jobs-button');
         await this.clickWaitTest('#community-jobs-button', '#jobs-list-create-button', "Opening Jobs");
     }
+
+    async searchResult(msg, exist = false) {
+        await this.wait(1100);
+        await this.wait('.jobs .job');
+        let $h = await this.getHtml();
+        let $selector = $h.find('.full-name');
+        let $eq = exist;
+        for (let i = 0; i < $selector.length; i++) {
+            if ($selector.eq(i).text() == this.newFullName) {
+                $eq = !exist;
+                break;
+            }
+        }
+        await this.test($eq, msg);
+    }
+
 
 
 

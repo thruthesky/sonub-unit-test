@@ -121,8 +121,7 @@ class BuyAndSell extends SonubNightMare {
         await this.clickWaitTest('.product-submit', '.buyandsell-success', 'buyandsell update success..');
         await this.closeAlert();
         await this.wait('.buyandsells a');
-        let $h = await this.getHtml();
-        await this.test(await $h.find('.product_title').eq(0).text() == this.newProduct, "Update Success");
+        await this.searchResult('newProduct edit successs');
     }
 
     async searchProduct() {
