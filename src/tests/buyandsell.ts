@@ -161,12 +161,8 @@ class BuyAndSell extends SonubNightMare {
         await this.wait('.search-form input[formcontrolname="tag"]');
         await this.insert('input[formcontrolname="tag"]', this.newProduct);
         await this.waitTest('.search-summary', 'searching deleted product');
-        await this.wait('.no-more-post');
-        let $h = await this.getHtml();
-        await this.test($h.find('.product_title') == 0, 'Product was deleted properly');
 
         await this.openBuyandsell();
-        await this.wait('.buyandsells a');
         await this.searchResult('New product must not exist', true);
     }
 

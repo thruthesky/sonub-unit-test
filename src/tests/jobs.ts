@@ -48,30 +48,34 @@ class Jobs extends SonubNightMare {
     async main() {
 
         let $h = await this.get(config.url);
-        await this.test($h.find('title').length == 1, "###### JOBS CHECKING.... ######");
+        await this.test($h.find('title').length == 1, "###### JOBS PAGE CHECKING.... ######");
         await this.test($h.find('.fa.fa-user-plus').length == 1, "user is not log-in");
 
+
+        this.nextAction('##### ANONYMOUS CRUD #####');
         await this.openJobsPage();
-
-
         await this.createJobsAnonymous();
         await this.editJobsAnonymous();
         await this.searchJobs();
-        await this.deleteJobsAnonymous();
+        // await this.deleteJobsAnonymous();
 
-        // await this.userLogin( this.emailTest, this.passwordTest );
-        // await this.createWithUser();
-        // await this.editWithUser();
-        // await this.searchJobs();
-        // await this.deleteWithUser();
+        this.nextAction('##### REGISTERED USER CRUD #####');
+        await this.userLogin( this.emailTest, this.passwordTest );
+        await this.openJobsPage();
+        await this.createJobWithUser();
+        await this.editJobWithUser();
+        await this.searchJobs();
+        await this.deleteJobWithUser();
 
 
-        // console.log('END OF BUY AND SELL CHECKING');
+        console.log('END OF JOBS PAGE CHECKING');
     }
 
 
+
+
     async createJobsAnonymous() {
-        this.nextAction('##### CREATING JOB POST #####');
+        this.nextAction('##### ANONYMOUS CREATING JOB POST #####');
 
         await this.createJobs();
 
@@ -81,6 +85,13 @@ class Jobs extends SonubNightMare {
         await this.clickWaitTest('.job-submit', '.alert-modal', 'Post Success' );
         await this.click('.alert-close');
 
+    }
+
+    async createJobWithUser() {
+        this.nextAction('##### USER CREATING JOB POST #####');
+        await this.createJobs();
+        await this.clickWaitTest('.job-submit', '.alert-modal', 'Post Success' );
+        await this.click('.alert-close');
     }
 
 
@@ -119,12 +130,10 @@ class Jobs extends SonubNightMare {
         await this.type('#content', this.message);
     }
 
+
     async editJobsAnonymous() {
         this.nextAction('##### EDITING JOBS POST BY ANONYMOUS #####');
-        await this.viewJobPost( this.fullName );
-        await this.clickWaitTest('.fa-pencil', 'select#province[ng-reflect-model="Metro Manila"]', 'JOB Edit page');
-        await this.type('#firstName', '');
-        await this.type('#firstName', this.newFirstName);
+        await this.editJobPost();
 
         await this.clickWaitTest('.job-submit', '.errorinput.password', '*anonymous password is required');
         await this.closeAlert();
@@ -132,6 +141,21 @@ class Jobs extends SonubNightMare {
         await this.clickWaitTest('.job-submit', '.alert-modal', 'Anonymous Job Edit Success' );
         await this.click('.alert-close');
         await this.searchResult('New post was update properly');
+    }
+
+    async editJobWithUser() {
+        this.nextAction('##### USER EDITING JOBS POST #####');
+        await this.editJobPost();
+        await this.clickWaitTest('.job-submit', '.alert-modal', 'Anonymous Job Edit Success' );
+        await this.click('.alert-close');
+        await this.searchResult('New post was update properly');
+    }
+
+    async editJobPost() {
+        await this.viewJobPost( this.fullName );
+        await this.clickWaitTest('.fa-pencil', 'select#province[ng-reflect-model="Metro Manila"]', 'JOB Edit page');
+        await this.type('#firstName', '');
+        await this.type('#firstName', this.newFirstName);
     }
 
     async searchJobs() {
@@ -159,6 +183,18 @@ class Jobs extends SonubNightMare {
     async deleteJobsAnonymous() {
         this.nextAction('##### DELETING JOB POST Anonymous #####');
         await this.viewJobPost( this.newFullName );
+        await this.wait('.profile .fa-trash-o');
+    }
+
+    async deleteJobWithUser() {
+        this.nextAction('##### USER DELETING JOB POST #####');
+        await this.viewJobPost( this.newFullName );
+        await this.waitTest('.profile .fa-trash-o', 'Job post before delete');
+        await this.clickWaitTest('.profile .fa-trash-o', '.confirm-modal', 'Confirm Modal Delete' );
+        await this.clickWaitTest('.modal-footer button:first-child', '.jobs .job', 'delete success back to list');
+
+        await this.openJobsPage();
+        await this.searchResult('Job post must not exist', true);
     }
 
     async viewJobPost(product) {
