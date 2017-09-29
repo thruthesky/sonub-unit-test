@@ -1,14 +1,21 @@
 var argv = require('yargs').argv;
 
 
-export let config = {
-    // url: 'https://www.sonub.com',
-    // url: 'https://sonub.com',
-    // url: 'https://sonub.com:8443'
+export interface _CONFIG {
+    url?:string
+    defaultOptions?: {}
+}
+
+export let config:_CONFIG = <_CONFIG>{
+    url: argv.url,
+    defaultOptions: {
+        show: false, x: 1024, y: 0, width: 600, height: 800,
+        openDevTools: {mode: ''}
+    }
 };
 
 
 
 
 
-config['url'] = argv.url;
+// config['url'] = argv.url;

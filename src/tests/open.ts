@@ -4,13 +4,8 @@
  * No write activity.
  * 
  */
-import { config } from './../confis';
-import { getNightmare, Mare } from '../nightmare';
-import * as t from '../test';
+import { Mare } from '../nightmare';
 const c = require('cheerio');
-
-let url = config.url;
-let n = getNightmare();
 
 
 run();

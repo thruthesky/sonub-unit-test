@@ -2,10 +2,7 @@ import {SonubNightMare} from './../sonub/nightmare';
 import {config} from './../confis';
 
 
-let defaultOptions = {
-    show: false, x: 1024, y: 0, width: 900, height: 1000,
-    openDevTools: {mode: ''}
-};
+let defaultOptions = config.defaultOptions;
 
 
 class Jobs extends SonubNightMare {
@@ -71,7 +68,7 @@ class Jobs extends SonubNightMare {
         this.firstName = pre + 'Name'+ time;
         this.middleName = 'Middle';
         this.lastName = 'Last';
-        this.newFirstName = 'newName' + time;
+        this.newFirstName = pre + 'newName' + time;
         this.fullName = this.firstName + ' ' + this.middleName + ' ' + this.lastName;
         this.newFullName = this.newFirstName + ' ' + this.middleName + ' ' + this.lastName;
         this.mobile = ''+time;
@@ -81,7 +78,6 @@ class Jobs extends SonubNightMare {
         this.experience = 0;
         this.randomProfession = Math.floor(Math.random() * 2);
         this.message =  'message ' + time;
-
     }
 
 
@@ -132,11 +128,11 @@ class Jobs extends SonubNightMare {
 
         await this.waitTest('option[value="Metro Manila"]', 'province was loaded');
         await this.select('#province', 'Metro Manila');
-        await this.waitTest('select#province[ng-reflect-model="Metro Manila"]', 'province changed');
+        // await this.waitTest('select#province[ng-reflect-model="Metro Manila"]', 'province changed');
 
         await this.waitTest('option[value="Metro Manila - Taguig City"]', 'city was loaded');
         await this.select('#city', 'Metro Manila - Taguig City');
-        await this.waitTest('select#city[ng-reflect-model="Metro Manila - Taguig City"]', 'city changed');
+        // await this.waitTest('select#city[ng-reflect-model="Metro Manila - Taguig City"]', 'city changed');
 
         await this.clickWaitTest('.job-submit', '.error-90046', '*Message is required');
         await this.closeAlert();
@@ -166,7 +162,8 @@ class Jobs extends SonubNightMare {
 
     async editJobPost() {
         await this.viewJobPost( this.fullName );
-        await this.clickWaitTest('.fa-pencil', 'select#province[ng-reflect-model="Metro Manila"]', 'JOB Edit page');
+        await this.clickWaitTest('.fa-pencil', 'option[value="Metro Manila"]', 'JOB Edit page');
+        await this.wait(500);
         await this.type('#firstName', '');
         await this.type('#firstName', this.newFirstName);
     }

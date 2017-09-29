@@ -12,10 +12,7 @@ declare var document;
 //     openDevTools: { mode: '' }
 // };
 
-let defaultOptions = {
-    show: false, x: 1024, y: 0, width: 640, height: 800,
-    openDevTools: { mode: '' }
-};
+let defaultOptions = config.defaultOptions;
 
 
 

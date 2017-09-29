@@ -51,6 +51,7 @@ export class SonubNightMare extends Nightmare {
         await this.submit();
         let loginStatus = await this.waitSelectorExist('.error-42053', '.home-form-header');
         if (loginStatus) {
+            console.log("##### LOGIN FAILED GOING TO REGISTER");
             await this.closeAlert();
             await this.userRegister( email, password);
         }
